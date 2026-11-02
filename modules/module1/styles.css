@@ -1,0 +1,64 @@
+.module-one {max-width:1280px;margin:auto;padding:42px 36px 20px}
+.module-one h1 {font-size:clamp(30px,3.4vw,46px);letter-spacing:-.04em;line-height:1.1;margin:10px 0 16px;max-width:800px}
+.module-one h2 {font-size:21px;line-height:1.3;letter-spacing:-.02em;margin:0 0 16px}
+.module-one p {line-height:1.65;font-size:14px}
+.module-one .m1-heading>p:not(.m1-eyebrow) {max-width:710px;font-size:16px;color:#526b65}
+.module-one .m1-eyebrow {font-size:11px;font-weight:800;letter-spacing:.13em;color:#497568;margin:0 0 9px}
+.module-one .m1-equation {display:flex;gap:28px;flex-wrap:wrap;font-family:Georgia,serif;font-size:21px;margin:22px 0 30px}
+.module-one .m1-equation span {color:#61796e}
+.module-one .m1-workspace {display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px}
+.module-one section {border:1px solid #d5dfd6;border-radius:15px;background:#fff;padding:24px}
+.module-one .m1-controls {background:#eef2e9}
+.module-one label {display:block;font-size:13px;font-weight:650;margin-bottom:8px}
+.module-one select {width:100%;border:1px solid #a7bbb1;border-radius:7px;padding:11px 9px;color:#173b38;background:#fff;font:inherit;font-size:13px;min-height:44px}
+.module-one button {font:inherit;font-size:13px;font-weight:650;border:1px solid #194d40;border-radius:7px;background:#194d40;color:#fff;padding:12px 15px;min-height:44px;cursor:pointer}
+.module-one button:hover {background:#256a57}
+.module-one .m1-secondary {background:transparent;color:#194d40;width:100%;margin-top:6px}
+.module-one .m1-secondary:hover {background:#dce8dc}
+.module-one :focus-visible {outline:3px solid #c67a2d;outline-offset:3px}
+.module-one .m1-slider {display:grid;grid-template-columns:1fr 1fr;margin:23px 0;gap:7px}
+.module-one .m1-slider label,.module-one .m1-slider output {grid-column:1/-1}
+.module-one .m1-slider label {margin:0}
+.module-one .m1-slider output {font-size:20px;font-weight:650}
+.module-one .m1-slider input {grid-column:1/-1;width:100%;accent-color:#216b52;min-height:28px;margin:0;cursor:pointer}
+.module-one .m1-slider span {font-size:11px;color:#526b65}
+.module-one .m1-slider span:last-child {text-align:right}
+.module-one .m1-note {color:#526b65;font-size:12px;margin:18px 0 0}
+.module-one .m1-chart-heading {display:flex;align-items:start;justify-content:space-between;gap:15px}
+.module-one .m1-chart-heading>span {font-size:12px;color:#526b65;white-space:nowrap;padding-top:4px}
+.module-one svg {width:100%;height:auto;display:block;overflow:visible}
+.module-one svg text {fill:#526b65;font-size:12px;font-family:inherit}
+.module-one .m1-grid {stroke:#e7ece5;stroke-width:1}
+.module-one .m1-line {fill:none;stroke-width:3;stroke-linejoin:round}
+.module-one .m1-input {stroke:#a96726;color:#8a5119;stroke-dasharray:3 5}
+.module-one .m1-reference {stroke:#738b9d;color:#4d677a;stroke-dasharray:9 5}
+.module-one .m1-output {stroke:#167453;color:#146849}
+.module-one .m1-marker {stroke:#779d86;stroke-dasharray:3 4}
+.module-one .m1-dot {fill:#167453;stroke:white;stroke-width:2}
+.module-one svg .m1-marker-label {fill:#1c6146;font-weight:700}
+.module-one .m1-lag {fill:none;stroke:#8a5119;stroke-width:2}
+.module-one .m1-legend {display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;margin:8px 0 23px}
+.module-one .m1-legend span:before {content:"";display:inline-block;width:20px;border-top:3px solid;margin-right:6px;vertical-align:middle}
+.module-one .m1-legend .m1-input:before {border-top-style:dotted}
+.module-one .m1-legend .m1-reference:before {border-top-style:dashed}
+.module-one .m1-metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;background:#f2f6ee;border-radius:9px;padding:16px}
+.module-one .m1-metrics span,.module-one .m1-metrics small {display:block;font-size:11px;line-height:1.5;color:#526b65}
+.module-one .m1-metrics strong {display:block;font-size:22px;line-height:1.6}
+.module-one .m1-formula {font-family:Georgia,serif;font-size:17px;padding:10px 0;margin-bottom:0}
+.module-one .m1-response>p:last-child {color:#526b65;font-size:13px}
+.module-one .m1-predict {margin:22px 0;display:grid;grid-template-columns:1fr 1fr;gap:36px;background:#e8eee0;border-color:#c3d2b8}
+.module-one .m1-predict p {margin-bottom:0}
+.module-one .m1-predict form button {margin-top:12px}
+.module-one [data-view="feedback"] {font-weight:600;color:#234e3b;min-height:22px}
+.module-one .m1-log {margin-bottom:22px}
+.module-one .m1-log>p {color:#526b65;max-width:900px}
+.module-one .m1-chart-heading label {width:160px;flex-shrink:0}
+.module-one .m1-table-wrap {overflow-x:auto}
+.module-one table {width:100%;border-collapse:collapse;font-size:13px;text-align:left}
+.module-one caption {text-align:left;font-size:12px;color:#526b65;margin:8px 0}
+.module-one th,.module-one td {padding:14px 10px;border-bottom:1px solid #e2e9df}
+.module-one thead {background:#f2f6ee}
+.module-one tbody th {font-weight:500}
+.module-one .m1-pass {font-weight:800;color:#1b6544}
+@media(max-width:850px) {.module-one .m1-workspace{grid-template-columns:1fr}.module-one .m1-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:0 20px}.module-one .m1-controls h2,.module-one .m1-controls>label,.module-one .m1-controls>select,.module-one .m1-controls>.m1-note{grid-column:1/-1}.module-one .m1-controls>button{grid-column:1/-1}.module-one .m1-predict{gap:22px}}
+@media(max-width:540px) {.module-one{padding:28px 14px 12px}.module-one section{padding:18px 14px}.module-one .m1-controls{grid-template-columns:1fr}.module-one .m1-slider{margin:14px 0}.module-one .m1-predict{grid-template-columns:1fr;gap:16px}.module-one .m1-metrics{grid-template-columns:1fr;gap:12px}.module-one .m1-metrics>div{border-bottom:1px solid #dce6d8;padding-bottom:8px}.module-one .m1-metrics>div:last-child{border:0;padding:0}.module-one .m1-chart-heading{flex-direction:column;gap:3px}.module-one .m1-chart-heading h2{margin-bottom:8px}.module-one .m1-chart-heading>span{margin-bottom:12px}.module-one .m1-chart-heading label{width:100%;margin-top:8px}.module-one .m1-legend{gap:9px;font-size:10px}.module-one th,.module-one td{padding:12px 6px;font-size:12px}.module-one .m1-equation{font-size:18px;gap:12px}}

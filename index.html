@@ -1,15 +1,22 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ENCS4380 - Dynamic Characteristics Toolkit</title>
+  <meta name="description" content="Explore first-order sensor step and ramp responses with live plots and lecture validation.">
+  <title>First-order response | ENCS4380 Dynamics Toolkit</title>
+  <link rel="stylesheet" href="./styles/site.css">
+  <link rel="stylesheet" href="./modules/module1/styles.css">
 </head>
 <body>
-  <h1>Dynamic Characteristics Toolkit</h1>
-  <p>ENCS4380 - Interfacing Techniques</p>
-  <p>Birzeit University</p>
-  <p>Interactive modules coming soon.</p>
+  <a class="skip-link" href="#main">Skip to sensor controls</a>
+  <header class="site-header"><a href="./index.html" aria-label="Dynamic Characteristics Toolkit home">DYNAMICS <span>/ KLOMBO</span></a><span>ENCS4380 · Birzeit University</span></header>
+  <main id="main" tabindex="-1"></main>
+  <noscript>This interactive toolkit requires JavaScript to draw the response curves.</noscript>
+  <footer class="site-footer">ENCS4380 · Interfacing Techniques <span>First-order time response</span></footer>
+  <script type="module">
+    import { mount } from './modules/module1/index.js';
+    mount(document.querySelector('#main'));
+  </script>
 </body>
 </html>
