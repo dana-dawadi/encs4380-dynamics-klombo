@@ -39,3 +39,19 @@ The browser test script records individual assertions and generates the screensh
 ## Limits
 
 No physical phone, Safari, or Firefox was tested. Browser accessibility checks cover labelled controls, keyboard use, and visible/textual equivalents; they are not a full screen-reader audit. The responsive horizontal time window follows 0–6τ, which is explicitly explained on the page. The log-error chart is the reference **step** error even when the response selector shows a ramp. Modules 2–4 and their validation checks are outside this change. No merge, public deployment, or final `v1.0` release is claimed.
+
+# Module 2 verification record
+
+| Requirement | Implementation | Verification |
+| --- | --- | --- |
+| Adjustable τ and input frequency | Log-scale sliders and exact lecture presets in `modules/module2/index.js` | Browser checks slider changes redraw metrics and cutoff immediately |
+| Input and output sines on one plot | Steady-state output, optional start-up transient, M line and Δt marker | Math test checks the ODE residual and settling to M sin(ωt + φ); browser checks the transient toggle |
+| Amplitude ratio and phase lag | `amplitudeRatio`, `phase`, `timeDelay` in `modules/module2/math.js` | Math tests at the cutoff (1/√2, −3 dB, −45°) and high-frequency slope (−20 dB/decade) |
+| Bode plot with cutoff at ω = 1/τ | Log-frequency magnitude and phase charts with asymptotes, cutoff line and current point | Browser checks cutoff text follows τ; extreme values give finite paths |
+| Dynamic-error calculator (δ = M − 1) | τmax from allowed error and highest frequency, with working shown | Math test checks M = 1 − e exactly at τmax; browser checks 0.523 ms / 9.3°, 50% accepted and 50.1% rejected, and out-of-range results (1000 Hz → 0.0523 ms) cannot be loaded |
+| Predict, then check | Doubles f after a required guess and reports the change in M, phase angle and time delay | Math test: angle rises and delay falls when f doubles (143 ms → 94.9 ms at τ = 0.2 s); browser checks feedback text and the 1000 Hz limit |
+| Validation checks 2 and 3 | `validate()` and validation table | All four values pass: M = 0.9285, 21.801°, τmax = 0.5231 ms, 9.333° |
+| Navigation | Hash router in `index.html`; cleanup before each mount; skip link does not change module | Browser checks tab switch, direct `#module2` link, and skip link |
+| Phone layout | Responsive grid and charts | No horizontal overflow at 390 and 320 px |
+
+Executed: `npm test` (10 tests, 0 failed, Module 1 and 2), `node tests/browser.mjs` (17 checks passed, Module 1 unchanged with the router), `node tests/browser-module2.mjs` (17 checks passed), headless Chromium, Node.js v22.

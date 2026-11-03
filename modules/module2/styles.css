@@ -1,0 +1,93 @@
+.module-two {max-width:1280px;margin:auto;padding:42px 36px 20px}
+.module-two h1 {font-size:clamp(30px,3.4vw,46px);letter-spacing:-.04em;line-height:1.1;margin:10px 0 16px;max-width:800px}
+.module-two h2 {font-size:21px;line-height:1.3;letter-spacing:-.02em;margin:0 0 16px}
+.module-two p {line-height:1.65;font-size:14px}
+.module-two .m2-heading>p:not(.m2-eyebrow) {max-width:710px;font-size:16px;color:#526b65}
+.module-two .m2-eyebrow {font-size:11px;font-weight:800;letter-spacing:.13em;color:#497568;margin:0 0 9px}
+.module-two .m2-equation {display:flex;gap:28px;flex-wrap:wrap;font-family:Georgia,serif;font-size:21px;margin:22px 0 30px}
+.module-two .m2-equation span {color:#61796e}
+.module-two .m2-workspace {display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px}
+.module-two section {border:1px solid #d5dfd6;border-radius:15px;background:#fff;padding:24px}
+.module-two .m2-controls {background:#eef2e9}
+.module-two label {display:block;font-size:13px;font-weight:650;margin-bottom:8px}
+.module-two select {width:100%;border:1px solid #a7bbb1;border-radius:7px;padding:11px 9px;color:#173b38;background:#fff;font:inherit;font-size:13px;min-height:44px}
+.module-two button {font:inherit;font-size:13px;font-weight:650;border:1px solid #194d40;border-radius:7px;background:#194d40;color:#fff;padding:12px 15px;min-height:44px;cursor:pointer}
+.module-two button:hover {background:#256a57}
+.module-two .m2-secondary {background:transparent;color:#194d40;width:100%;margin-top:6px}
+.module-two .m2-secondary:hover {background:#dce8dc}
+.module-two :focus-visible {outline:3px solid #c67a2d;outline-offset:3px}
+.module-two .m2-slider {display:grid;grid-template-columns:1fr 1fr;margin:23px 0;gap:7px}
+.module-two .m2-slider label,.module-two .m2-slider output {grid-column:1/-1}
+.module-two .m2-slider label {margin:0}
+.module-two .m2-slider output {font-size:20px;font-weight:650}
+.module-two .m2-slider input {grid-column:1/-1;width:100%;accent-color:#216b52;min-height:28px;margin:0;cursor:pointer}
+.module-two .m2-slider span {font-size:11px;color:#526b65}
+.module-two .m2-slider span:last-child {text-align:right}
+.module-two .m2-note {color:#526b65;font-size:12px;margin:18px 0 0}
+.module-two .m2-chart-heading {display:flex;align-items:start;justify-content:space-between;gap:15px}
+.module-two .m2-chart-heading>span {font-size:12px;color:#526b65;white-space:nowrap;padding-top:4px}
+.module-two svg {width:100%;height:auto;display:block;overflow:visible}
+.module-two svg text {fill:#526b65;font-size:12px;font-family:inherit}
+.module-two .m2-grid {stroke:#e7ece5;stroke-width:1}
+.module-two .m2-line {fill:none;stroke-width:3;stroke-linejoin:round}
+.module-two .m2-input {stroke:#a96726;color:#8a5119;stroke-dasharray:3 5}
+.module-two .m2-reference {stroke:#738b9d;color:#4d677a;stroke-dasharray:9 5}
+.module-two .m2-output {stroke:#167453;color:#146849}
+.module-two .m2-marker {stroke:#779d86;stroke-dasharray:3 4}
+.module-two .m2-dot {fill:#167453;stroke:white;stroke-width:2}
+.module-two svg .m2-marker-label {fill:#1c6146;font-weight:700}
+.module-two .m2-lag {fill:none;stroke:#8a5119;stroke-width:2}
+.module-two .m2-legend {display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:11px;margin:8px 0 23px}
+.module-two .m2-legend span:before {content:"";display:inline-block;width:20px;border-top:3px solid;margin-right:6px;vertical-align:middle}
+.module-two .m2-legend .m2-input:before {border-top-style:dotted}
+.module-two .m2-legend .m2-reference:before {border-top-style:dashed}
+.module-two .m2-metrics {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;background:#f2f6ee;border-radius:9px;padding:16px}
+.module-two .m2-metrics span,.module-two .m2-metrics small {display:block;font-size:11px;line-height:1.5;color:#526b65}
+.module-two .m2-metrics strong {display:block;font-size:22px;line-height:1.6}
+.module-two .m2-formula {font-family:Georgia,serif;font-size:17px;padding:10px 0;margin-bottom:0}
+.module-two .m2-response>p:last-child {color:#526b65;font-size:13px}
+.module-two .m2-predict {margin:22px 0;display:grid;grid-template-columns:1fr 1fr;gap:36px;background:#e8eee0;border-color:#c3d2b8}
+.module-two .m2-predict p {margin-bottom:0}
+.module-two .m2-predict form button {margin-top:12px}
+.module-two [data-view="feedback"] {font-weight:600;color:#234e3b;min-height:22px}
+.module-two .m2-log {margin-bottom:22px}
+.module-two .m2-log>p {color:#526b65;max-width:900px}
+.module-two .m2-chart-heading label {width:160px;flex-shrink:0}
+.module-two .m2-table-wrap {overflow-x:auto}
+.module-two table {width:100%;border-collapse:collapse;font-size:13px;text-align:left}
+.module-two caption {text-align:left;font-size:12px;color:#526b65;margin:8px 0}
+.module-two th,.module-two td {padding:14px 10px;border-bottom:1px solid #e2e9df}
+.module-two thead {background:#f2f6ee}
+.module-two tbody th {font-weight:500}
+.module-two .m2-pass {font-weight:800;color:#1b6544}
+@media(max-width:850px) {.module-two .m2-workspace{grid-template-columns:1fr}.module-two .m2-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:0 20px}.module-two .m2-controls h2,.module-two .m2-controls>label,.module-two .m2-controls>select,.module-two .m2-controls>.m2-note{grid-column:1/-1}.module-two .m2-controls>button{grid-column:1/-1}.module-two .m2-predict{gap:22px}}
+@media(max-width:540px) {.module-two{padding:28px 14px 12px}.module-two section{padding:18px 14px}.module-two .m2-controls{grid-template-columns:1fr}.module-two .m2-slider{margin:14px 0}.module-two .m2-predict{grid-template-columns:1fr;gap:16px}.module-two .m2-metrics{grid-template-columns:1fr;gap:12px}.module-two .m2-metrics>div{border-bottom:1px solid #dce6d8;padding-bottom:8px}.module-two .m2-metrics>div:last-child{border:0;padding:0}.module-two .m2-chart-heading{flex-direction:column;gap:3px}.module-two .m2-chart-heading h2{margin-bottom:8px}.module-two .m2-chart-heading>span{margin-bottom:12px}.module-two .m2-chart-heading label{width:100%;margin-top:8px}.module-two .m2-legend{gap:9px;font-size:10px}.module-two th,.module-two td{padding:12px 6px;font-size:12px}.module-two .m2-equation{font-size:18px;gap:12px}}
+/* Module 2 additions */
+.module-two .m2-check {display:flex;align-items:center;gap:9px;font-weight:600;margin:4px 0 18px;cursor:pointer}
+.module-two .m2-check input {width:18px;height:18px;accent-color:#216b52;margin:0}
+.module-two .m2-label {font-size:13px;font-weight:650;margin:0 0 8px}
+.module-two .m2-presets {display:grid;gap:8px;margin-bottom:8px}
+.module-two .m2-presets .m2-secondary {margin:0;font-weight:600;text-align:left}
+.module-two .m2-zero {stroke:#c9d4cb;stroke-width:1.5}
+.module-two .m2-dot-in {fill:#a96726}
+.module-two .m2-dot-cut {fill:#fff;stroke:#a96726;stroke-width:2}
+.module-two svg .m2-lag-label {fill:#8a5119;font-weight:700}
+.module-two .m2-asym {fill:none;stroke:#738b9d;stroke-width:1.5;stroke-dasharray:7 5}
+.module-two .m2-cutline {stroke:#a96726;stroke-width:1.5;stroke-dasharray:3 4}
+.module-two .m2-legend .m2-reference {color:#4d677a}
+.module-two .m2-legend .m2-cut {color:#a96726}
+.module-two .m2-legend .m2-cut:before {border-top-style:dotted}
+.module-two [data-view="bode-mag"] {margin-bottom:6px}
+.module-two .m2-metrics {grid-template-columns:repeat(4,minmax(0,1fr))}
+.module-two .m2-calc-out {grid-template-columns:repeat(3,minmax(0,1fr));margin-top:18px}
+.module-two .m2-bode,.module-two .m2-calc {margin-bottom:22px}
+.module-two .m2-bode>p,.module-two .m2-calc>p {color:#526b65;max-width:900px}
+.module-two .m2-calc-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.module-two input[type="number"] {width:100%;border:1px solid #a7bbb1;border-radius:7px;padding:11px 9px;color:#173b38;background:#fff;font:inherit;font-size:14px;min-height:44px}
+.module-two .m2-inline {width:auto;margin-top:4px}
+.module-two button:disabled {opacity:.5;cursor:not-allowed}
+@media(max-width:1100px) {.module-two .m2-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px) {.module-two .m2-controls{grid-template-columns:repeat(2,1fr)}.module-two .m2-controls>.m2-check,.module-two .m2-controls>.m2-label,.module-two .m2-controls>.m2-presets{grid-column:1/-1}.module-two .m2-presets{grid-template-columns:1fr 1fr}}
+@media(max-width:540px) {.module-two .m2-metrics,.module-two .m2-calc-out,.module-two .m2-calc-grid,.module-two .m2-presets{grid-template-columns:1fr}.module-two .m2-inline{width:100%}}
+.module-two .m2-warning {color:#8a5119;font-weight:600;font-size:13px;margin:10px 0 0}
+.module-two .m2-warning:empty {display:none}

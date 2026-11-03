@@ -3,20 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Explore first-order sensor step and ramp responses with live plots and lecture validation.">
+  <meta name="description" content="Interactive first-order sensor time and frequency responses with live plots and lecture validation.">
   <title>First-order response | ENCS4380 Dynamics Toolkit</title>
   <link rel="stylesheet" href="./styles/site.css">
   <link rel="stylesheet" href="./modules/module1/styles.css">
+  <link rel="stylesheet" href="./modules/module2/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to sensor controls</a>
   <header class="site-header"><a href="./index.html" aria-label="Dynamic Characteristics Toolkit home">DYNAMICS <span>/ KLOMBO</span></a><span>ENCS4380 · Birzeit University</span></header>
+  <nav class="module-nav" aria-label="Modules">
+    <a href="#module1" data-route="module1">1 · Time response</a>
+    <a href="#module2" data-route="module2">2 · Frequency response</a>
+  </nav>
   <main id="main" tabindex="-1"></main>
   <noscript>This interactive toolkit requires JavaScript to draw the response curves.</noscript>
-  <footer class="site-footer">ENCS4380 · Interfacing Techniques <span>First-order time response</span></footer>
+  <footer class="site-footer">ENCS4380 · Interfacing Techniques <span data-footer>First-order time response</span></footer>
   <script type="module">
-    import { mount } from './modules/module1/index.js';
-    mount(document.querySelector('#main'));
+    // Hash router: each module exposes mount(root) and returns a cleanup function.
+    const routes = {
+      module1: { load: () => import('./modules/module1/index.js'), title: 'First-order response', footer: 'First-order time response' },
+      module2: { load: () => import('./modules/module2/index.js'), title: 'First-order frequency response', footer: 'First-order frequency response' },
+    };
+    const main = document.querySelector('#main');
+    let cleanup = null, current = null, token = 0;
+    async function show(name) {
+      if (name === current) return;
+      const mine = ++token;
+      const { mount } = await routes[name].load();
+      if (mine !== token) return;
+      cleanup?.();
+      cleanup = mount(main);
+      current = name;
+      document.title = `${routes[name].title} | ENCS4380 Dynamics Toolkit`;
+      document.querySelector('[data-footer]').textContent = routes[name].footer;
+      document.querySelectorAll('[data-route]').forEach(a => a.dataset.route === name ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+    }
+    // Unknown hashes (such as the skip link's #main) keep the current module.
+    const fromHash = () => routes[location.hash.slice(1)] ? location.hash.slice(1) : null;
+    addEventListener('hashchange', () => { const name = fromHash(); if (name) { show(name); scrollTo(0, 0); } });
+    show(fromHash() || 'module1');
   </script>
 </body>
 </html>
