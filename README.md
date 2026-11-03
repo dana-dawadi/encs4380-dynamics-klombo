@@ -4,13 +4,20 @@ Interactive sensor models for Interfacing Techniques at Birzeit University.
 
 [Live GitHub Pages site](https://dana-dawadi.github.io/encs4380-dynamics-klombo/)
 
-Module 1 is implemented on this feature branch. The live site updates only after the pull request is reviewed and merged into `main`.
+Module 1 is implemented on `main` and published on the live site.
 
 ## Team and scope
 
 Team: Aseel Hamed, Ahmad Khdair, Muhammad Herzallah, and Dana Dawadi.
 
-Module 1 (first-order time response): Ahmad Khdair. Module 2–4 ownership is not recorded here yet. This change implements only Module 1 and the minimal shared page needed to open it; it does not implement the other modules.
+| Module | Owner |
+| --- | --- |
+| 1 — First-order time response | Ahmad Khdair |
+| 2 — First-order frequency response | Aseel Hamed |
+| 3 — Second-order response and state-space panel | Muhammad Herzallah |
+| 4 — Guess the sensor challenge | Dana Dawadi |
+
+The current implementation covers Module 1 and the minimal shared page needed to open it. Modules 2–4 are assigned as shown above and remain for their owners to implement.
 
 ## Module 1
 
