@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./modules/module1/styles.css">
   <link rel="stylesheet" href="./modules/module2/styles.css">
   <link rel="stylesheet" href="./modules/module3/styles.css">
+  <link rel="stylesheet" href="./modules/module4/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to sensor controls</a>
@@ -17,6 +18,7 @@
     <a href="#module1" data-route="module1">1 · Time response</a>
     <a href="#module2" data-route="module2">2 · Frequency response</a>
     <a href="#module3" data-route="module3">3 · Second-order response</a>
+    <a href="#module4" data-route="module4">4 · Guess the sensor</a>
   </nav>
   <main id="main" tabindex="-1"></main>
   <noscript>This interactive toolkit requires JavaScript to draw the response curves.</noscript>
@@ -27,6 +29,7 @@
       module1: { load: () => import('./modules/module1/index.js'), title: 'First-order response', footer: 'First-order time response' },
       module2: { load: () => import('./modules/module2/index.js'), title: 'First-order frequency response', footer: 'First-order frequency response' },
       module3: { load: () => import('./modules/module3/index.js'), title: 'Second-order response', footer: 'Second-order time response' },
+      module4: { load: () => import('./modules/module4/index.js'), title: 'Guess the sensor', footer: 'Guess the sensor challenge' },
       };
     const main = document.querySelector('#main');
     let cleanup = null, current = null, token = 0;
