@@ -196,6 +196,14 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 
 ![Module 2 phone view](docs/screenshots/module2-mobile.png)
 
+![Module 3 desktop view](docs/screenshots/module3-desktop.png)
+
+![Module 3 phone view](docs/screenshots/module3-mobile.png)
+
+![Module 4 desktop view](docs/screenshots/module4-desktop.png)
+
+![Module 4 phone view](docs/screenshots/module4-mobile.png)
+
 ## Assistance disclosure
 
 OpenAI Codex assisted with Module 1,3,4 implementation, documentation, and automated tests. Claude assisted with the Module 2 implementation, its tests, and documentation.
