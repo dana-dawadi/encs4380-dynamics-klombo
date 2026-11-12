@@ -69,6 +69,66 @@ For |δ| ≤ e up to ω: `τmax = √(1/(1 − e)² − 1) / ω`. With e = 0.05 
 
 The page uses K = 1 and A = 1, so the plotted output amplitude equals M.
 
+## Module 3 — Second-Order Response
+
+This module explores the dynamic behavior of second-order sensors and systems using interactive simulations.
+
+### Features
+- Interactive controls for damping ratio (ζ) and natural frequency (ωn).
+- Step-response visualization for underdamped, critically damped, and overdamped systems.
+- Calculation of rise time, peak time, percentage overshoot, and settling time.
+- Pole visualization in the s-plane.
+- State-space representation of a mass-spring-damper system.
+- Interactive controls for mass (m), damping coefficient (b), and spring stiffness (k).
+- Comparison between state-space eigenvalues and transfer-function poles.
+- Phase-plane trajectory visualization.
+- Validation checks against the lecture examples.
+
+### Mathematical Model
+
+The second-order transfer function is:
+
+`G(s) = Kωn² / (s² + 2ζωn s + ωn²)`
+
+The damping ratio determines the type of response, while the natural frequency affects its speed.
+
+The state-space model demonstrates how the physical parameters relate to the second-order system behavior.
+
+---
+
+## Module 4 — Guess the Sensor Challenge
+
+This module tests the user's understanding of dynamic sensor characteristics through an interactive parameter-estimation game.
+
+### Features
+- Random generation of hidden first-order or underdamped second-order sensors.
+- Randomized parameters and simulated measurement noise.
+- Interactive step-response graphs with X/Y hover readings.
+- Estimation of static gain (K) and time constant (τ) for first-order sensors.
+- Estimation of damping ratio (ζ) and natural frequency (ωn) for second-order sensors.
+- Hints to help users apply the estimation methods from the lectures.
+- Comparison between the user's estimated response and the actual response.
+- Scoring based on the professor's 10% relative-error criterion.
+- Running session score and a New Sensor button.
+
+### Mathematical Methods
+
+For first-order sensors:
+
+`y(t) = KA(1 − exp(−t/τ))`
+
+The time constant can be estimated from the point where the output reaches approximately 63.2% of its final value.
+
+For underdamped second-order sensors:
+
+`Mp = exp(−πζ / √(1 − ζ²))`
+
+`tp = π / (ωn√(1 − ζ²))`
+
+The user estimates the damping ratio from overshoot and the natural frequency from peak time.
+
+The challenge encourages users to work backward from measured responses instead of directly changing model parameters.
+
 ## Run locally
 
 No build step, CDN, login, or backend is required. Serve the repository with any static HTTP server, for example:
@@ -81,7 +141,7 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 
 ## Structure and integration
 
-- `index.html`: page shell, module tabs, and a hash router (`#module1`, `#module2`) that calls each module's cleanup before mounting the next.
+- `index.html`: page shell, module tabs, and a a hash router (`#module1`, `#module2`, `#module3`, `#module4`) that calls each module's cleanup before mounting the next.
 - `modules/module1/index.js`: `mount(root)` renders the module and returns a cleanup function. A future router should call cleanup before changing modules.
 - `modules/module1/math.js`: pure, validated equations with no DOM dependency.
 - `styles/site.css`: shared page shell and base styles.
@@ -91,7 +151,14 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 - `modules/module2/index.js`, `math.js`, `styles.css`: Module 2, same `mount(root)` interface, styles scoped under `.module-two`.
 - `tests/module2.test.js`: Module 2 equation tests (cutoff, ODE residual of the sine response, τmax, lecture values, invalid input).
 - `tests/browser-module2.mjs`: Module 2 browser checks, including navigation and phone layout.
-
+- `modules/module3/index.js`: Module 3 interface, interactive second-order response plots, damping controls, pole visualization, state-space representation, and phase-plane simulation using the `mount(root)` interface.
+- `modules/module3/calculations.js`: Second-order step-response equations, response metrics, pole calculations, state-space matrices, and RK4 phase-trajectory simulation.
+- `modules/module3/styles.css`: Module 3 styling for controls, graphs, metrics, state-space panels, and responsive layout.
+- `tests/module3.test.js`: Module 3 validation tests for second-order response, damping behavior, overshoot, and state-space calculations.
+- `modules/module4/index.js`: Module 4 interactive Guess the Sensor game, graph rendering, X/Y hover readings, parameter estimation, hints, reveal overlays, and session scoring.
+- `modules/module4/calculations.js`: Random first-order and underdamped second-order sensor generation, response calculations, simulated measurement noise, parameter validation, and scoring.
+- `modules/module4/styles.css`: Module 4 styling for the challenge interface, response graphs, input forms, results, and responsive layout.
+- `tests/module4.test.js`: Module 4 automated tests for random sensor generation, response equations, parameter estimation, scoring, and challenge functionality.
 To add a module: create `modules/moduleN/` with the same `mount(root)`/cleanup interface, add its stylesheet to `index.html`, and add one entry to `routes` and one tab link. There are no placeholder tabs for unfinished modules.
 
 ## Verification
@@ -131,4 +198,4 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 
 ## Assistance disclosure
 
-OpenAI Codex assisted with Module 1 implementation, documentation, and automated tests. Claude assisted with the Module 2 implementation, its tests, and documentation.
+OpenAI Codex assisted with Module 1,3,4 implementation, documentation, and automated tests. Claude assisted with the Module 2 implementation, its tests, and documentation.
