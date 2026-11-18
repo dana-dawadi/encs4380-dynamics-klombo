@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./modules/module3/styles.css">
   <link rel="stylesheet" href="./modules/module4/styles.css">
   <link rel="stylesheet" href="./modules/p1/styles.css">
+  <link rel="stylesheet" href="./modules/p2/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to sensor controls</a>
@@ -24,6 +25,7 @@
     </div>
     <div class="nav-group" role="group" aria-labelledby="nav-control"><span class="nav-label" id="nav-control">Control · HW2</span>
       <a href="#p1" data-route="p1">P1 · PID playground</a>
+      <a href="#p2" data-route="p2">P2 · Slow sensor in the loop</a>
     </div>
   </nav>
   <main id="main" tabindex="-1"></main>
@@ -37,6 +39,7 @@
       module3: { load: () => import('./modules/module3/index.js'), title: 'Second-order response', footer: 'Second-order time response' },
       module4: { load: () => import('./modules/module4/index.js'), title: 'Guess the sensor', footer: 'Guess the sensor challenge' },
       p1: { load: () => import('./modules/p1/index.js'), title: 'PID playground', footer: 'Control · PID playground' },
+      p2: { load: () => import('./modules/p2/index.js'), title: 'Slow sensor in the loop', footer: 'Control · A slow sensor in the loop' },
     };
     const main = document.querySelector('#main');
     let cleanup = null, current = null, token = 0;

@@ -21,7 +21,7 @@ export function simulate({ plant, Kp = 0, Ki = 0, Kd = 0, r = 1, uMin = -Infinit
   if (!(uMax > uMin)) throw new RangeError('uMax must be greater than uMin.');
   const base = timeScale(plant);
   Tf ??= filterTime(plant, Kd);
-  T ??= horizon(plant, Kp, Ki);
+  T ??= horizon(plant, Kp, Ki, sensorTau);
   dt ??= stepSize(plant, Kp, Kd, Tf, sensorTau);
   // At most 200 000 RK4 steps. A long window may use a coarser step, but never past 1/(fastest rate),
   // well inside RK4's stability limit; if even that is not enough, the window is shortened.
@@ -67,13 +67,14 @@ export function simulate({ plant, Kp = 0, Ki = 0, Kd = 0, r = 1, uMin = -Infinit
   return out;
 }
 
-// Long enough to see the slowest mode settle: the plant, or the integral mode
-// whose time constant is about (1 + K·Kp)/(K·Ki) for a first-order plant.
-export function horizon(plant, Kp, Ki) {
+// Long enough to see the slowest mode settle: the plant, the integral mode
+// whose time constant is about (1 + K·Kp)/(K·Ki) for a first-order plant, or a slow sensor (P2).
+export function horizon(plant, Kp, Ki, sensorTau = 0) {
   const base = timeScale(plant);
   let T = plant.type === 'first' ? 12 * base : Math.max(12 * base, 10 / Math.max(plant.zeta * plant.wn, 0.05 * plant.wn));
   if (Ki > 0) T = Math.max(T, 10 * (1 + plant.K * Kp) / (plant.K * Ki));
-  return Math.min(T, 3000 * base);
+  if (sensorTau > 0) T = Math.max(T, 12 * sensorTau);
+  return Math.min(T, 3000 * Math.max(base, sensorTau));
 }
 
 // Derivative filter time: 1% of the plant time scale, made longer when Kd is so large
@@ -84,11 +85,13 @@ export function filterTime(plant, Kd) {
 }
 
 // The fastest loop mode sets the step: the plant sped up by K·Kp, the derivative path, the sensor.
-export function stepSize(plant, Kp, Kd, Tf, sensorTau = 0) {
+export function fastestRate(plant, Kp, Kd, Tf, sensorTau = 0) {
   const base = timeScale(plant);
   const dRate = Kd > 0 ? 1 / Tf + (plant.type === 'first' ? plant.K * Kd / (Tf * plant.tau) : Math.sqrt(plant.K * Kd / Tf) * plant.wn) : 0;
-  const rate = Math.max(1 / base, (1 + plant.K * Kp) / base, dRate, sensorTau > 0 ? 1 / sensorTau : 0);
-  return Math.min(base / 400, 1 / (8 * rate));
+  return Math.max(1 / base, (1 + plant.K * Kp) / base, dRate, sensorTau > 0 ? 1 / sensorTau : 0);
+}
+export function stepSize(plant, Kp, Kd, Tf, sensorTau = 0) {
+  return Math.min(timeScale(plant) / 400, 1 / (8 * fastestRate(plant, Kp, Kd, Tf, sensorTau)));
 }
 
 // Step-response metrics read from the simulated curve.
@@ -97,9 +100,14 @@ export function metrics(sim, band = 0.02) {
   const { t, y, r } = sim, n = y.length;
   if (sim.unstable) return { status: 'unstable', unstable: true, settled: false };
   const tail = y.subarray(Math.floor(n * 0.9));
-  let lo = Infinity, hi = -Infinity;
-  for (const v of tail) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
-  const settled = hi - lo <= 0.002 * Math.max(Math.abs(y[n - 1]), Math.abs(r) * 0.01, 1e-12);
+  const flat = arr => {
+    let lo = Infinity, hi = -Infinity;
+    for (const v of arr) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    return hi - lo <= 0.002 * Math.max(Math.abs(arr[arr.length - 1]), Math.abs(r) * 0.01, 1e-12);
+  };
+  // With a sensor in the loop (P2) the measured value must have stopped moving too:
+  // a saturated plant can sit still while a slow sensor is still catching up.
+  const settled = flat(tail) && (!sim.ym || sim.ym === y || flat(sim.ym.subarray(Math.floor(n * 0.9))));
   // Not settled: a growing swing means unstable, otherwise a sustained oscillation.
   const swing = (a, b) => { let m = 0; for (let i = a; i < b; i++) m = Math.max(m, Math.abs(y[i] - r)); return m; };
   const growing = !settled && swing(Math.floor(n * 0.9), n) > 1.05 * swing(Math.floor(n * 0.8), Math.floor(n * 0.9));
@@ -159,8 +167,8 @@ export function validate() {
 
 // Simulate, and if a slowly decaying mode has not settled yet, look further ahead (up to 3000 plant time scales).
 export function run(opts) {
-  const cap = 3000 * timeScale(opts.plant);
-  let T = opts.T ?? horizon(opts.plant, opts.Kp ?? 0, opts.Ki ?? 0);
+  const cap = 3000 * Math.max(timeScale(opts.plant), opts.sensorTau || 0);
+  let T = opts.T ?? horizon(opts.plant, opts.Kp ?? 0, opts.Ki ?? 0, opts.sensorTau || 0);
   for (;;) {
     const sim = simulate({ ...opts, T });
     const m = metrics(sim);

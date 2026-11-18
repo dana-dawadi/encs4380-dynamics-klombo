@@ -4,7 +4,7 @@ Interactive sensor models (Homework 1) and PID control (Homework 2) for Interfac
 
 [Live GitHub Pages site](https://dana-dawadi.github.io/encs4380-dynamics-klombo/)
 
-Homework 1 Modules 1–4 and Homework 2 Module P1 are implemented. The navigation at the top of the page has two sections: **Dynamics · HW1** and **Control · HW2**.
+Homework 1 Modules 1–4 and Homework 2 Modules P1 and P2 are implemented. The navigation at the top of the page has two sections: **Dynamics · HW1** and **Control · HW2**.
 
 ## Team and scope
 
@@ -22,7 +22,7 @@ Team: Aseel Hamed, Ahmad Khdair, Muhammad Herzallah, and Dana Dawadi.
 | Module | Owner |
 | --- | --- |
 | P1 — PID playground | Aseel Hamed |
-| P2 — A slow sensor in the loop | To be assigned |
+| P2 — A slow sensor in the loop | Ahmad Khdair |
 | P3 — Digital PID | To be assigned |
 | P4 — Tuning challenge | To be assigned |
 | My system (Micromouse drive motor) | To be assigned |
@@ -173,6 +173,43 @@ GA12-N20 encoder motor, 6 V, 500 RPM, 1:30 gearbox, driven through the TB6612FNG
 - The damping ratio ζ = 0.75 is not a motor property: it comes from the chosen gains (Kp = 2, Ki = 60) together with K and τ.
 - Preset gains Kp = 2, Ki = 60 give ζ = 0.75 (inside the lecture's 0.6–0.8 range) and keep the PWM between about 46% and 65%, inside 0–100%. Because K and τ are approximate, these gains should be re-checked once the motor is measured.
 
+## Control P2 — A slow sensor in the loop
+
+- P1's loop with Module 1's first-order sensor H(s) = 1/(τs·s + 1) in the feedback path. The controller acts on e = r − ym, the sensor reading, never on the true output y.
+- A logarithmic τs slider (0.1 ms–10 s, the same span as Module 2's τ slider) and an "Ideal sensor (τs = 0)" switch, plus Kp, Ki, Kd, the plant (Module 1 first order or Module 3 second order), the setpoint and the u limit.
+- The true output y and the sensor reading ym on the same plot, with y for an ideal sensor as a reference and a marker at the moment y first reaches r. A note reads off what the controller sees at that moment: the sensor is still short, so the controller keeps pushing.
+- Live true overshoot, sensor-reading overshoot, settling time of y, and the critical τs at which the loop starts to oscillate. The status says whether the loop settles, oscillates in a limit cycle against the u limit, or is unstable.
+- An "Overshoot against τs" chart for the current gains: the overshoot of y and of ym grows as the sensor slows, and the range where the linear loop is unstable is shaded, starting at the critical τs.
+- The block diagram with the sensor block in the feedback path, the control signal u with its limit, and a short explanation of why lag causes overshoot.
+- Presets: P1's lecture loop after its experiment 1 (K = 1, τ = 1 s, Kp = 9, Ki = 20), the Micromouse motor read through a filtered encoder speed (τs = 10 ms, an assumed filter setting), and Module 3's second-order plant with P only.
+- Predict, then check: three experiments (slow the sensor down; which overshoots more, y or ym; fix an oscillating loop with a faster sensor and the same gains).
+
+### Model and analysis
+
+The simulation is P1's RK4 simulator in `modules/control/sim.js`, with the sensor state τs·dym/dt = y − ym. The stability analysis is in `modules/control/analysis.js`: it builds the characteristic polynomial of the same loop, 1 + C(s)G(s)H(s) = 0, and applies the Routh–Hurwitz test. The critical τs is found by scanning τs on a logarithmic grid and bisecting at each change of stability. The u limit is not part of this linear analysis; with a limit the curves still come from the simulation.
+
+For the first-order plant K/(τs + 1):
+
+- P only: `ττs·s² + (τ + τs)·s + (1 + KKp) = 0`, so `ωn = √((1 + KKp)/(ττs))` and `ζ = (τ + τs)/(2√(ττs(1 + KKp)))`. The sensor reading ym/r is exactly Module 3's second-order step scaled by KKp/(1 + KKp), so its overshoot follows Module 3's formula. This loop never becomes unstable.
+- PI: `ττs·s³ + (τ + τs)·s² + (1 + KKp)·s + KKi = 0`. Routh–Hurwitz: stable while `ττs·KKi < (τ + τs)(1 + KKp)`, so the critical sensor time constant is `τs,crit = τ(1 + KKp)/(τKKi − (1 + KKp))` when τKKi > 1 + KKp (otherwise no τs makes it unstable). At τs,crit the loop oscillates at `ω = √((1 + KKp)/(ττs))`.
+- A gain-1 sensor does not change the final value: in steady state ym = y. It changes the transient.
+
+With Kp = 9 and Ki = 20 on the lecture plant, τs,crit = 10/(20 − 10) = 1 s. The closed loop reaches 63.2% in about 0.1 s, ten times faster than the plant, so even τs = 0.1 s (a tenth of the plant's τ) raises the true overshoot from 6.2% to 41%: the sensor has to be fast compared with the closed loop, not the plant.
+
+For the second-order plant with P only the band of unstable τs is bounded on both sides; with ζ = 0.5, ωn = 2 rad/s and Kp = 5 it is 0.134–1.87 s (ωn·τs = 2 ± √3). Above it the sensor is so slow that it sets the pace of the whole loop.
+
+### P2 checks (plant K = 1, τ = 1 s, no limit)
+
+1. P only, Kp = 9, τs = 0.1 s: the sensor-reading overshoot matches Module 3's formula, 12.63% with ζ = 0.55.
+2. Same loop: the steady-state error is still 1/(1 + KKp) = 10%.
+3. PI, Kp = 9, Ki = 20: the closed-form critical τs (1 s) matches the numerical Routh–Hurwitz scan.
+4. At 0.9 × τs,crit the RK4 simulation settles; at 1.1 × τs,crit the oscillation grows.
+5. At τs,crit the simulated oscillation frequency is √10 = 3.162 rad/s, and the closed-loop poles lie on the jω axis.
+
+### Micromouse motor with the encoder
+
+The motor uses P1's preset (K = 0.65 (rad/s)/%, τ = 0.06 s, Kp = 2, Ki = 60, PWM 0–100%). The wheel speed comes from encoder counts and is smoothed in software, which behaves roughly like a first-order sensor; τs = 10 ms is an assumed filter setting, not a measurement. With it the overshoot rises from 5.8% (ideal sensor) to 12.5%. The critical τs for these gains is 3.45 s, but above about 0.3 s the loop is barely damped, so a speed filter should stay in the millisecond range.
+
 ## Run locally
 
 No build step, CDN, login, or backend is required. Serve the repository with any static HTTP server, for example:
@@ -203,11 +240,16 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 - `modules/module4/calculations.js`: Random first-order and underdamped second-order sensor generation, response calculations, simulated measurement noise, parameter validation, and scoring.
 - `modules/module4/styles.css`: Module 4 styling for the challenge interface, response graphs, input forms, results, and responsive layout.
 - `tests/module4.test.js`: Module 4 automated tests for random sensor generation, response equations, parameter estimation, scoring, and challenge functionality.
-- `modules/control/sim.js`: shared closed-loop RK4 simulator for P1–P4 (`simulate`, `run`, `metrics`, `theory`, `validate`). Supports first- and second-order plants, PID with a filtered derivative, a u limit, and an optional feedback sensor τs for P2.
+- `modules/control/sim.js`: shared closed-loop RK4 simulator for P1–P4 (`simulate`, `run`, `metrics`, `theory`, `validate`). Supports first- and second-order plants, PID with a filtered derivative, a u limit, and an optional feedback sensor τs for P2. With a sensor, the simulated window also covers the sensor's time constant, and a run only counts as settled when the sensor reading has settled too.
+- `modules/control/analysis.js`: shared linear analysis for P2 onward: the characteristic polynomial of the loop, the Routh–Hurwitz test, the τs (or any gain) at which the loop becomes unstable, and the closed-loop poles.
 - `modules/control/plot.js`: shared SVG line-chart helper for the Control modules.
 - `modules/p1/index.js`, `styles.css`: P1 PID playground, same `mount(root)` interface, styles scoped under `.control-p1`.
 - `tests/p1.test.js`: simulator tests: the three validation checks, P-only formulas for other plants, PI with a saturated actuator, Kd damping, the u limit, the motor preset, slow and unstable loops, extreme gains, invalid input.
 - `tests/browser-p1.mjs`: P1 browser checks, including navigation, presets, both experiments, limits, phone layout and screenshots.
+- `modules/p2/index.js`, `styles.css`: P2 slow-sensor page, same `mount(root)` interface, styles scoped under `.control-p2`.
+- `modules/p2/model.js`: P2 calculations without the DOM: the τs sweep, what the controller sees when y reaches r, the oscillation frequency, and the P2 checks. It reuses Module 3's `responseMetrics` for the overshoot formula.
+- `tests/p2.test.js`: P2 tests: characteristic polynomials, Routh–Hurwitz against the roots, the critical τs in closed form, by scan and by simulation, Module 3's overshoot for P only, the second-order unstable band, overshoot growth with τs, the controller acting on ym, a saturated motor with a slow sensor, the limit cycle, the oscillation frequency, τs = 0 equal to P1, and extreme settings.
+- `tests/browser-p2.mjs`: P2 browser checks, including navigation, the checks table, the three experiments, presets, the sweep chart, phone layout and screenshots.
 
 To add a module: create `modules/moduleN/` with the same `mount(root)`/cleanup interface, add its stylesheet to `index.html`, and add one entry to `routes` and one tab link. There are no placeholder tabs for unfinished modules.
 
@@ -219,7 +261,7 @@ With Node.js installed:
 npm test
 ```
 
-This runs the unit tests for every module (Modules 1–4 and P1).
+This runs the unit tests for every module (Modules 1–4, P1 and P2).
 
 For the browser checks, install Playwright locally without adding a production dependency:
 
@@ -229,6 +271,7 @@ npx playwright install chromium
 node tests/browser.mjs
 node tests/browser-module2.mjs
 node tests/browser-p1.mjs
+node tests/browser-p2.mjs
 ```
 
 The browser runner also accepts `PLAYWRIGHT_PATH` and `BROWSER_EXECUTABLE` for an existing installation. It exercises the site under a repository-style URL prefix and saves desktop and phone screenshots.
@@ -260,6 +303,12 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 ![P1 with the Micromouse motor preset](docs/screenshots/p1-motor.png)
 
 ![P1 phone view](docs/screenshots/p1-mobile.png)
+
+![P2 slow sensor, P1's loop with τs = 100 ms](docs/screenshots/p2-desktop.png)
+
+![P2 past the critical τs: the oscillation grows](docs/screenshots/p2-oscillation.png)
+
+![P2 phone view](docs/screenshots/p2-mobile.png)
 
 ## Assistance disclosure
 
