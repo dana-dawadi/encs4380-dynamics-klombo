@@ -55,3 +55,23 @@ No physical phone, Safari, or Firefox was tested. Browser accessibility checks c
 | Phone layout | Responsive grid and charts | No horizontal overflow at 390 and 320 px |
 
 Executed: `npm test` (10 tests, 0 failed, Module 1 and 2), `node tests/browser.mjs` (17 checks passed, Module 1 unchanged with the router), `node tests/browser-module2.mjs` (17 checks passed), headless Chromium, Node.js v22.
+
+# Control P1 verification record
+
+| Requirement | Implementation | Verification |
+| --- | --- | --- |
+| Choose the plant (Module 1 first order or Module 3 second order) | Plant selector and parameter sliders in `modules/p1/index.js` | Browser: second-order preset switches the visible controls and gives 16.7% error with P only |
+| Kp, Ki, Kd and setpoint step | Sliders, presets, live redraw | Browser: Ki removes the error; Kd shows the filtered-derivative note |
+| Block diagram | SVG diagram with current gains, limit and plant | Browser: diagram text updates with the motor preset |
+| Output against setpoint | RK4 simulation in `modules/control/sim.js`, plot with ±2% band, peak and settling markers | Unit tests compare the simulation with τ/(1 + KKp), 1/(1 + KKp) and 1 − e^(−t) |
+| Control signal u with its limit | Clipped u, limit lines, time at the limit | Unit test: u never leaves [u min, u max]; browser: tight limit reports saturation and windup |
+| Live rise time, overshoot, settling time, steady-state error | `metrics()` reads them from the simulated curve. Settling is measured around the final value; the status says separately whether the setpoint was reached, and when a stuck actuator makes it unreachable | Unit tests for slow, unstable and saturated loops; browser checks "Settled, but not at the setpoint", the stuck-actuator, limit-cycle and unstable messages |
+| Solver required (Euler or RK4) | Fixed-step RK4, step from the fastest loop mode, at most 200 000 steps | Unit test: extreme gains stay finite |
+| Validation checks 1–3 | `validate()` and the page table (6 rows) | All six rows pass in Node and on the page |
+| Predict, then check | Two experiments: add I (error → 0), add D (overshoot falls) | Browser: empty guess blocked; correct and incorrect feedback with numbers |
+| Phone layout | Responsive grid; narrow block-diagram layout | No horizontal overflow at 390 and 320 px |
+| HW1 still works | Router extended, HW1 modules untouched | `browser.mjs` (17) and `browser-module2.mjs` (17) still pass |
+
+Executed: `npm test` (36 tests, 0 failed), `node tests/browser-p1.mjs` (18 checks passed), headless Chromium, Node.js v22.
+
+Limits: the motor K = 0.65 (rad/s)/% is calculated from the datasheet no-load speed, so it is a no-load value; τ = 0.06 s is an approximate estimate, not a measurement. Validation check 3 assumes a stable loop with u not stuck at a limit. The derivative is filtered with Tf = 1% of the plant time scale, so the derivative kick has a finite height. Anti-windup and sampling are left to P3; a slow sensor in the loop to P2 (the simulator already supports `sensorTau`).
