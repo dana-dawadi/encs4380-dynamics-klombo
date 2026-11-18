@@ -311,5 +311,5 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 ![P2 phone view](docs/screenshots/p2-mobile.png)
 
 ## Assistance disclosure
-
+Claude (Anthropic) assisted with the Homework 2 P2 implementation on the website, and automated tests. Team members please dont forget to add  this part (':
 OpenAI Codex assisted with Module 1,3,4 implementation, documentation, and automated tests. Claude (Anthropic) assisted with the Module 2 implementation, its tests, and documentation, and with the Homework 2 P1 implementation: the shared RK4 simulator, the P1 page, its tests, the motor datasheet search and this documentation.
