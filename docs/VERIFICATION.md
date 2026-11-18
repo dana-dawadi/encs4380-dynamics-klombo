@@ -75,3 +75,22 @@ Executed: `npm test` (10 tests, 0 failed, Module 1 and 2), `node tests/browser.m
 Executed: `npm test` (36 tests, 0 failed), `node tests/browser-p1.mjs` (18 checks passed), headless Chromium, Node.js v22.
 
 Limits: the motor K = 0.65 (rad/s)/% is calculated from the datasheet no-load speed, so it is a no-load value; τ = 0.06 s is an approximate estimate, not a measurement. Validation check 3 assumes a stable loop with u not stuck at a limit. The derivative is filtered with Tf = 1% of the plant time scale, so the derivative kick has a finite height. Anti-windup and sampling are left to P3; a slow sensor in the loop to P2 (the simulator already supports `sensorTau`).
+
+# Control P2 verification record
+
+| Requirement | Implementation | Verification |
+| --- | --- | --- |
+| Sensor τs (first-order sensor in the feedback path) | Log slider 0.1 ms–10 s and an ideal-sensor switch in `modules/p2/index.js`; sensor state in the shared RK4 simulator | Unit test: τs = 0 gives exactly P1's loop; browser: ideal sensor makes the two overshoots equal |
+| PID gains | Kp, Ki, Kd sliders, presets, plant choice from Module 1 or Module 3 | Browser: presets and extreme values give finite plots |
+| True output and sensor reading on the same plot | y, ym and the ideal-sensor y on one chart, marker where y first reaches r | Browser: one y path and one ym path; default loop shows 41.3% true vs 28.2% sensor overshoot |
+| Overshoot grows with τs until the loop oscillates | "Overshoot against τs" chart from `sweep()`; unstable range shaded from the Routh–Hurwitz test; critical τs card and status | Unit tests: overshoot non-decreasing up to τs,crit = 1 s, no stable point above it; critical τs agrees in closed form, by scan and by simulation; browser: τs = 1.5 s is reported unstable, and a limit cycle with the u limit |
+| The controller only controls what the sensor says | e = r − ym in the simulator; the page reports ym, the error and u when y reaches r | Unit test: e = r − ym at every sample and ym is 45% short when y reaches r; browser: the note reads 0.45 |
+| Predict, then check | Three experiments: slower sensor, y vs ym, fix with a faster sensor | Browser: empty guess blocked, correct and incorrect feedback with numbers |
+| Theory | `modules/control/analysis.js`: characteristic polynomial, Routh–Hurwitz, critical τs, poles | Unit tests: hand-derived polynomials, Routh against the roots, second-order band 2 ± √3 |
+| P2 checks on the page | `validate()` in `modules/p2/model.js` (7 rows) | All rows pass in Node and on the page |
+| Phone layout | Responsive grid, narrow block diagram with the sensor | No horizontal overflow at 390 and 320 px |
+| P1 and HW1 still work | Router extended; P1 and HW1 modules untouched. Shared `sim.js`: the window also covers τs, a run is settled only when ym has settled too, and the fastest-rate formula is exported | `npm test` (P1 tests unchanged), `browser.mjs` (17), `browser-module2.mjs` (17), `browser-p1.mjs` (18) still pass |
+
+Executed: `npm test` (49 tests, 0 failed), `node tests/browser-p2.mjs` (16 checks passed), plus the HW1 and P1 browser runners, headless Chrome, Node.js v22.
+
+Limits: the stability shading and critical τs are for the linear loop; with a u limit the loop is nonlinear and only the simulation applies. The sensor has gain 1. Near the critical τs the swings decay or grow so slowly that a finite simulation window cannot settle them; without a limit the page then follows the Routh–Hurwitz result. For the motor, τs = 10 ms is an assumed encoder-filter setting, not a measurement.
