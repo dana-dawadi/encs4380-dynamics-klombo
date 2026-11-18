@@ -1,10 +1,10 @@
-# ENCS4380 Dynamic Characteristics Toolkit — Klombo
+# ENCS4380 Dynamics and Control Toolkit — Klombo
 
-Interactive sensor models for Interfacing Techniques at Birzeit University.
+Interactive sensor models (Homework 1) and PID control (Homework 2) for Interfacing Techniques at Birzeit University.
 
 [Live GitHub Pages site](https://dana-dawadi.github.io/encs4380-dynamics-klombo/)
 
-Modules 1 and 2 are implemented. Use the tabs at the top of the page to switch modules.
+Homework 1 Modules 1–4 and Homework 2 Module P1 are implemented. The navigation at the top of the page has two sections: **Dynamics · HW1** and **Control · HW2**.
 
 ## Team and scope
 
@@ -17,7 +17,15 @@ Team: Aseel Hamed, Ahmad Khdair, Muhammad Herzallah, and Dana Dawadi.
 | 3 — Second-order response and state-space panel | Muhammad Herzallah |
 | 4 — Guess the sensor challenge | Dana Dawadi |
 
-The current implementation covers Modules 1 and 2 and a small hash router that switches between them. Modules 3 and 4 are assigned as shown above and remain for their owners to implement.
+### Homework 2 — PID Control
+
+| Module | Owner |
+| --- | --- |
+| P1 — PID playground | Aseel Hamed |
+| P2 — A slow sensor in the loop | To be assigned |
+| P3 — Digital PID | To be assigned |
+| P4 — Tuning challenge | To be assigned |
+| My system (Micromouse drive motor) | To be assigned |
 
 ## Module 1
 
@@ -129,6 +137,42 @@ The user estimates the damping ratio from overshoot and the natural frequency fr
 
 The challenge encourages users to work backward from measured responses instead of directly changing model parameters.
 
+## Control P1 — PID playground
+
+- Plant: first order K/(τs + 1) from Module 1, or second order Kωn²/(s² + 2ζωn s + ωn²) from Module 3, with sliders for every parameter.
+- Controller gains Kp, Ki and Kd, the setpoint step r, and an adjustable limit [u min, u max] on the control signal.
+- A live block diagram (r → Σ → PID → limit → plant → y, with unity feedback) that shows the current values.
+- The output against the setpoint, with the ±2% band, the peak and the settling time marked, and the control signal u with its limit lines and the fraction of time spent on the limit.
+- Rise time (10–90%), overshoot, settling time (2%) and steady-state error, all read from the simulated curve. The page also reports when a loop is still settling, oscillating, in a limit cycle against the u limit, or unstable.
+- **Settling is measured around the final value, not the setpoint.** Rise time, overshoot and settling time use the final value y(∞); steady-state error compares y(∞) with r. Reaching the setpoint is a separate condition: with P only, Kp = 9, the loop settles at 0.9, and the page says "Settled, but not at the setpoint". If u ends stuck at its limit, the page says the setpoint is out of reach.
+- For a first-order plant without D or saturation, the lecture formulas are shown next to the simulation (P: τcl and ess; PI: ωn and ζ).
+- Presets: the lecture validation loop, our Micromouse drive motor, and Module 3's second-order plant.
+- Predict, then check: two guided experiments (add I to a P loop; add D to a PI loop on the second-order plant).
+- A table of what raising each gain does, and the three Homework 2 validation checks.
+
+### Simulation
+
+The closed loop is integrated with fixed-step fourth-order Runge–Kutta (RK4) in `modules/control/sim.js`; no closed-form answer is assumed. The state is the plant output (and its derivative for a second-order plant), the error integral, the derivative-filter state and, for P2, an optional sensor state.
+
+`u = clip(Kp·e + Ki·∫e dt + Kd·(e − x_f)/Tf, u min, u max)`, with `dx_f/dt = (e − x_f)/Tf`
+
+The derivative is filtered (`Kd·s/(Tf·s + 1)`) because the derivative of a step error is infinite. Tf is 1% of the plant time scale, made longer only when Kd is very large. The RK4 step is chosen from the fastest loop mode, and the window is extended until slow integral modes settle.
+
+### Validation (plant K = 1, τ = 1 s, no limit)
+
+1. P only, Kp = 9: the simulated 63.2% time is 0.100 s = τ/(1 + KKp), and the steady-state error is 10.00% = 1/(1 + KKp).
+2. PI, Kp = Ki = 1: ωn = √(KKi/τ) = 1 rad/s and ζ = (1 + KKp)/(2√(τKKi)) = 1. The PI zero at s = −1 cancels one of the two poles at s = −1, so the closed loop is 1/(s + 1); the simulation matches 1 − e^(−t) to within 10⁻⁶.
+3. Any PI: five gain pairs all settle with zero steady-state error. This holds when the closed loop is stable and u is not stuck at a limit. A PI loop on this first-order plant is stable for any positive gains; the check runs without a limit. Counter-example on the page: the motor preset with u max = 40% needs about 46% PWM to hold 30 rad/s, so u stays at 40% and an error remains even with Ki.
+
+### Micromouse motor preset
+
+GA12-N20 encoder motor, 6 V, 500 RPM, 1:30 gearbox, driven through the TB6612FNG from a 2S LiPo (7.4 V). Input u is PWM duty (%), output y is wheel speed (rad/s).
+
+- **K = 0.65 (rad/s)/% — calculated from the datasheet.** The no-load speed is 500 RPM = 52.4 rad/s at 6 V. Assuming speed scales linearly with voltage, 100% PWM from the 7.4 V battery gives about 64.6 rad/s, so K ≈ 64.6/100. This is a **no-load** value: under load the motor runs slower (the datasheet gives 375 RPM at rated torque), so the real K on the floor is likely somewhat lower. Source: [RobotShop 12SG-N20VA-30-EN datasheet](https://ca.robotshop.com/products/6v-301-micro-metal-motor-w-magnetic-encoder-cable-500rpm), the closest published datasheet for this 6 V, 500 RPM, 1:30 motor.
+- **τ = 0.06 s — an approximate estimate, not a datasheet value.** No N20 datasheet lists a mechanical time constant. It is estimated from τ ≈ J·ω₀/T_stall, with the datasheet stall torque (0.4 kg·cm) and an assumed robot mass of about 150 g; the rotor inertia is unknown, so the true value may be roughly 0.05–0.08 s. It should be replaced by a measured value if a PWM step test is run.
+- The damping ratio ζ = 0.75 is not a motor property: it comes from the chosen gains (Kp = 2, Ki = 60) together with K and τ.
+- Preset gains Kp = 2, Ki = 60 give ζ = 0.75 (inside the lecture's 0.6–0.8 range) and keep the PWM between about 46% and 65%, inside 0–100%. Because K and τ are approximate, these gains should be re-checked once the motor is measured.
+
 ## Run locally
 
 No build step, CDN, login, or backend is required. Serve the repository with any static HTTP server, for example:
@@ -141,8 +185,8 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 
 ## Structure and integration
 
-- `index.html`: page shell, module tabs, and a a hash router (`#module1`, `#module2`, `#module3`, `#module4`) that calls each module's cleanup before mounting the next.
-- `modules/module1/index.js`: `mount(root)` renders the module and returns a cleanup function. A future router should call cleanup before changing modules.
+- `index.html`: page shell, navigation grouped into Dynamics · HW1 and Control · HW2, and a hash router (`#module1`–`#module4`, `#p1`) that calls each module's cleanup before mounting the next.
+- `modules/module1/index.js`: `mount(root)` renders the module and returns a cleanup function, which the router calls before changing modules.
 - `modules/module1/math.js`: pure, validated equations with no DOM dependency.
 - `styles/site.css`: shared page shell and base styles.
 - `modules/module1/styles.css`: module styles scoped under `.module-one`.
@@ -159,6 +203,12 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 - `modules/module4/calculations.js`: Random first-order and underdamped second-order sensor generation, response calculations, simulated measurement noise, parameter validation, and scoring.
 - `modules/module4/styles.css`: Module 4 styling for the challenge interface, response graphs, input forms, results, and responsive layout.
 - `tests/module4.test.js`: Module 4 automated tests for random sensor generation, response equations, parameter estimation, scoring, and challenge functionality.
+- `modules/control/sim.js`: shared closed-loop RK4 simulator for P1–P4 (`simulate`, `run`, `metrics`, `theory`, `validate`). Supports first- and second-order plants, PID with a filtered derivative, a u limit, and an optional feedback sensor τs for P2.
+- `modules/control/plot.js`: shared SVG line-chart helper for the Control modules.
+- `modules/p1/index.js`, `styles.css`: P1 PID playground, same `mount(root)` interface, styles scoped under `.control-p1`.
+- `tests/p1.test.js`: simulator tests: the three validation checks, P-only formulas for other plants, PI with a saturated actuator, Kd damping, the u limit, the motor preset, slow and unstable loops, extreme gains, invalid input.
+- `tests/browser-p1.mjs`: P1 browser checks, including navigation, presets, both experiments, limits, phone layout and screenshots.
+
 To add a module: create `modules/moduleN/` with the same `mount(root)`/cleanup interface, add its stylesheet to `index.html`, and add one entry to `routes` and one tab link. There are no placeholder tabs for unfinished modules.
 
 ## Verification
@@ -169,7 +219,7 @@ With Node.js installed:
 npm test
 ```
 
-This checks the step landmarks and gain scaling, ramp ODE residual and asymptote, small-time numerical stability, logarithm slopes, and invalid parameters.
+This runs the unit tests for every module (Modules 1–4 and P1).
 
 For the browser checks, install Playwright locally without adding a production dependency:
 
@@ -178,6 +228,7 @@ npm install --no-save playwright
 npx playwright install chromium
 node tests/browser.mjs
 node tests/browser-module2.mjs
+node tests/browser-p1.mjs
 ```
 
 The browser runner also accepts `PLAYWRIGHT_PATH` and `BROWSER_EXECUTABLE` for an existing installation. It exercises the site under a repository-style URL prefix and saves desktop and phone screenshots.
@@ -204,6 +255,12 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 
 ![Module 4 phone view](docs/screenshots/module4-mobile.png)
 
+![P1 PID playground, lecture loop](docs/screenshots/p1-desktop.png)
+
+![P1 with the Micromouse motor preset](docs/screenshots/p1-motor.png)
+
+![P1 phone view](docs/screenshots/p1-mobile.png)
+
 ## Assistance disclosure
 
-OpenAI Codex assisted with Module 1,3,4 implementation, documentation, and automated tests. Claude assisted with the Module 2 implementation, its tests, and documentation.
+OpenAI Codex assisted with Module 1,3,4 implementation, documentation, and automated tests. Claude (Anthropic) assisted with the Module 2 implementation, its tests, and documentation, and with the Homework 2 P1 implementation: the shared RK4 simulator, the P1 page, its tests, the motor datasheet search and this documentation.
