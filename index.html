@@ -1,10 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ENCS4380 toolkit: interactive sensor dynamics (Homework 1) and PID control (Homework 2) with live plots and lecture validation.">
-  <title>First-order response | ENCS4380 Dynamics Toolkit</title>
+  <meta name="description" content="ENCS4380 toolkit: interactive sensor dynamics and PID control.">
+  <title>ENCS4380 Dynamics Toolkit</title>
+
   <link rel="stylesheet" href="./styles/site.css">
   <link rel="stylesheet" href="./modules/module1/styles.css">
   <link rel="stylesheet" href="./modules/module2/styles.css">
@@ -12,56 +14,166 @@
   <link rel="stylesheet" href="./modules/module4/styles.css">
   <link rel="stylesheet" href="./modules/p1/styles.css">
   <link rel="stylesheet" href="./modules/p2/styles.css">
+  <link rel="stylesheet" href="./modules/p3/styles.css">
   <link rel="stylesheet" href="./modules/p4/styles.css">
 </head>
+
 <body>
-  <a class="skip-link" href="#main">Skip to sensor controls</a>
-  <header class="site-header"><a href="./index.html" aria-label="Dynamic Characteristics Toolkit home">DYNAMICS <span>/ KLOMBO</span></a><span>ENCS4380 · Birzeit University</span></header>
+  <a class="skip-link" href="#main">
+    Skip to sensor controls
+  </a>
+
+  <header class="site-header">
+    <a href="./index.html" aria-label="Dynamic Characteristics Toolkit home">
+      DYNAMICS <span>/ KLOMBO</span>
+    </a>
+    <span>ENCS4380 · Birzeit University</span>
+  </header>
+
   <nav class="module-nav" aria-label="Modules">
-    <div class="nav-group" role="group" aria-labelledby="nav-dynamics"><span class="nav-label" id="nav-dynamics">Dynamics · HW1</span>
-      <a href="#module1" data-route="module1">1 · Time response</a>
-      <a href="#module2" data-route="module2">2 · Frequency response</a>
-      <a href="#module3" data-route="module3">3 · Second-order response</a>
-      <a href="#module4" data-route="module4">4 · Guess the sensor</a>
+    <div class="nav-group" role="group" aria-labelledby="nav-dynamics">
+      <span class="nav-label" id="nav-dynamics">
+        Dynamics · HW1
+      </span>
+
+      <a href="#module1" data-route="module1">
+        1 · Time response
+      </a>
+      <a href="#module2" data-route="module2">
+        2 · Frequency response
+      </a>
+      <a href="#module3" data-route="module3">
+        3 · Second-order response
+      </a>
+      <a href="#module4" data-route="module4">
+        4 · Guess the sensor
+      </a>
     </div>
-    <div class="nav-group" role="group" aria-labelledby="nav-control"><span class="nav-label" id="nav-control">Control · HW2</span>
-      <a href="#p1" data-route="p1">P1 · PID playground</a>
-      <a href="#p2" data-route="p2">P2 · Slow sensor in the loop</a>
-      <a href="#p4" data-route="p4">P4 · PID tuning challenge</a>
+
+    <div class="nav-group" role="group" aria-labelledby="nav-control">
+      <span class="nav-label" id="nav-control">
+        Control · HW2
+      </span>
+
+      <a href="#p1" data-route="p1">
+        P1 · PID playground
+      </a>
+      <a href="#p2" data-route="p2">
+        P2 · Slow sensor in the loop
+      </a>
+      <a href="#p3" data-route="p3">
+        P3 · Digital PID
+      </a>
+      <a href="#p4" data-route="p4">
+        P4 · PID tuning challenge
+      </a>
     </div>
   </nav>
+
   <main id="main" tabindex="-1"></main>
-  <noscript>This interactive toolkit requires JavaScript to draw the response curves.</noscript>
-  <footer class="site-footer">ENCS4380 · Interfacing Techniques <span data-footer>First-order time response</span></footer>
+
+  <noscript>
+    This interactive toolkit requires JavaScript.
+  </noscript>
+
+  <footer class="site-footer">
+    ENCS4380 · Interfacing Techniques
+    <span data-footer>First-order time response</span>
+  </footer>
+
   <script type="module">
-    // Hash router: each module exposes mount(root) and returns a cleanup function.
+    // Each module exports mount(root) and a cleanup function.
     const routes = {
-      module1: { load: () => import('./modules/module1/index.js'), title: 'First-order response', footer: 'First-order time response' },
-      module2: { load: () => import('./modules/module2/index.js'), title: 'First-order frequency response', footer: 'First-order frequency response' },
-      module3: { load: () => import('./modules/module3/index.js'), title: 'Second-order response', footer: 'Second-order time response' },
-      module4: { load: () => import('./modules/module4/index.js'), title: 'Guess the sensor', footer: 'Guess the sensor challenge' },
-      p1: { load: () => import('./modules/p1/index.js'), title: 'PID playground', footer: 'Control · PID playground' },
-      p2: { load: () => import('./modules/p2/index.js'), title: 'Slow sensor in the loop', footer: 'Control · A slow sensor in the loop' },
-      p4: { load: () => import('./modules/p4/index.js'), title: 'PID tuning challenge', footer: 'Control · PID tuning challenge' },
-      
+      module1: {
+        load: () => import('./modules/module1/index.js'),
+        title: 'First-order response',
+        footer: 'First-order time response'
+      },
+      module2: {
+        load: () => import('./modules/module2/index.js'),
+        title: 'First-order frequency response',
+        footer: 'First-order frequency response'
+      },
+      module3: {
+        load: () => import('./modules/module3/index.js'),
+        title: 'Second-order response',
+        footer: 'Second-order time response'
+      },
+      module4: {
+        load: () => import('./modules/module4/index.js'),
+        title: 'Guess the sensor',
+        footer: 'Guess the sensor challenge'
+      },
+      p1: {
+        load: () => import('./modules/p1/index.js'),
+        title: 'PID playground',
+        footer: 'Control · PID playground'
+      },
+      p2: {
+        load: () => import('./modules/p2/index.js'),
+        title: 'Slow sensor in the loop',
+        footer: 'Control · A slow sensor in the loop'
+      },
+      p3: {
+        load: () => import('./modules/p3/index.js'),
+        title: 'Digital PID',
+        footer: 'Control · Digital PID'
+      },
+      p4: {
+        load: () => import('./modules/p4/index.js'),
+        title: 'PID tuning challenge',
+        footer: 'Control · PID tuning challenge'
+      }
     };
+
     const main = document.querySelector('#main');
-    let cleanup = null, current = null, token = 0;
+
+    let cleanup = null;
+    let current = null;
+    let token = 0;
+
     async function show(name) {
       if (name === current) return;
+
       const mine = ++token;
       const { mount } = await routes[name].load();
+
       if (mine !== token) return;
+
       cleanup?.();
+
       cleanup = mount(main);
       current = name;
-      document.title = `${routes[name].title} | ENCS4380 Dynamics Toolkit`;
-      document.querySelector('[data-footer]').textContent = routes[name].footer;
-      document.querySelectorAll('[data-route]').forEach(a => a.dataset.route === name ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+
+      document.title =
+        `${routes[name].title} | ENCS4380 Dynamics Toolkit`;
+
+      document.querySelector('[data-footer]').textContent =
+        routes[name].footer;
+
+      document.querySelectorAll('[data-route]').forEach(a => {
+        if (a.dataset.route === name) {
+          a.setAttribute('aria-current', 'page');
+        } else {
+          a.removeAttribute('aria-current');
+        }
+      });
     }
-    // Unknown hashes (such as the skip link's #main) keep the current module.
-    const fromHash = () => routes[location.hash.slice(1)] ? location.hash.slice(1) : null;
-    addEventListener('hashchange', () => { const name = fromHash(); if (name) { show(name); scrollTo(0, 0); } });
+
+    const fromHash = () =>
+      routes[location.hash.slice(1)]
+        ? location.hash.slice(1)
+        : null;
+
+    addEventListener('hashchange', () => {
+      const name = fromHash();
+
+      if (name) {
+        show(name);
+        scrollTo(0, 0);
+      }
+    });
+
     show(fromHash() || 'module1');
   </script>
 </body>
