@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="./modules/p1/styles.css">
   <link rel="stylesheet" href="./modules/p2/styles.css">
   <link rel="stylesheet" href="./modules/p3/styles.css">
+  <link rel="stylesheet" href="./modules/p4/styles.css">
 </head>
 
 <body>
@@ -62,6 +63,9 @@
       </a>
       <a href="#p3" data-route="p3">
         P3 · Digital PID
+      </a>
+      <a href="#p4" data-route="p4">
+        P4 · PID tuning challenge
       </a>
     </div>
   </nav>
@@ -114,6 +118,11 @@
         load: () => import('./modules/p3/index.js'),
         title: 'Digital PID',
         footer: 'Control · Digital PID'
+      },
+      p4: {
+        load: () => import('./modules/p4/index.js'),
+        title: 'PID tuning challenge',
+        footer: 'Control · PID tuning challenge'
       }
     };
 
