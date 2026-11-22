@@ -209,6 +209,71 @@ For the second-order plant with P only the band of unstable τs is bounded on bo
 ### Micromouse motor with the encoder
 
 The motor uses P1's preset (K = 0.65 (rad/s)/%, τ = 0.06 s, Kp = 2, Ki = 60, PWM 0–100%). The wheel speed comes from encoder counts and is smoothed in software, which behaves roughly like a first-order sensor; τs = 10 ms is an assumed filter setting, not a measurement. With it the overshoot rises from 5.8% (ideal sensor) to 12.5%. The critical τs for these gains is 3.45 s, but above about 0.3 s the loop is barely damped, so a speed filter should stay in the millisecond range.
+## Control P3 — Digital PID
+
+- Simulates a digital PID controller using adjustable proportional (Kp), integral (Ki), and derivative (Kd) gains.
+- Adjustable sampling time Ts to demonstrate how the controller's performance changes as the sampling interval increases.
+- Supports first-order and second-order plant models from Homework 1.
+- Displays the system output against the desired setpoint and the stair-step control signal produced by the digital controller.
+- Shows how large sampling times can reduce accuracy, increase overshoot, and cause instability.
+- Anti-windup option to prevent excessive integral accumulation when the control signal reaches its limits.
+- Generates Arduino PID code using the selected gains and sampling time, with a button to copy the code.
+- Includes a Predict, then Check activity to help users understand the effect of digital sampling.
+
+### Mathematical Model
+
+The discrete PID equation is:
+
+`u[k] = Kp·e[k] + Ki·Ts·Σe[j] + (Kd/Ts)·(e[k] − e[k−1])`
+
+Where:
+- `e[k]` is the error at sample k.
+- `Ts` is the sampling period.
+- `Kp`, `Ki`, and `Kd` are the PID gains.
+
+The controller calculates a new control output every Ts seconds and holds it until the next sample.
+
+Anti-windup is used to limit integral accumulation when the actuator reaches its output limits.
+
+The module includes automated tests for digital PID calculations, plant simulation, and generated Arduino code.
+
+## Control P4 — PID Tuning Challenge
+
+- Interactive PID tuning challenge that reuses the random plant concept from Homework 1 Module 4.
+- Random selection of hidden first-order and second-order plants.
+- Adjustable PID gains (Kp, Ki, Kd) to tune the controller's response.
+- Uses the shared closed-loop PID simulator from P1 to calculate the system response.
+- Displays the simulated output against the desired setpoint.
+- Provides performance specifications for overshoot, settling time, and steady-state error.
+- Displays PASS/FAIL results for each specification and calculates an overall score.
+- Includes a Predict, then Check activity to encourage users to predict how changing the gains will affect the response.
+- Includes multiple validated challenges with reference gains to ensure the generated tasks are achievable.
+
+### Simulation and Evaluation
+
+The PID controller is:
+
+`C(s) = Kp + Ki/s + Kd·s`
+
+The closed-loop response is calculated using the shared numerical simulation engine in `modules/control/sim.js`, which uses fourth-order Runge–Kutta (RK4).
+
+The performance of each attempt is evaluated using:
+
+- Overshoot: maximum percentage by which the output exceeds the target response.
+- Settling time: time required for the response to remain within the specified tolerance band.
+- Steady-state error: difference between the desired setpoint and the final output.
+
+Each requirement is evaluated separately, and the overall score is calculated based on the passed specifications.
+
+### Validation
+
+- All six predefined random challenges have verified reference gains capable of satisfying their specifications.
+- P-only controllers with persistent steady-state error cannot pass the zero-error requirement.
+- Unstable or unsettled responses cannot pass the performance checks.
+- Invalid PID gain values are rejected.
+- Random challenge selection is validated through automated tests.
+
+After integrating P4, all 55 automated tests passed with no failures.
 
 ## Run locally
 
