@@ -315,6 +315,14 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 - `modules/p2/model.js`: P2 calculations without the DOM: the τs sweep, what the controller sees when y reaches r, the oscillation frequency, and the P2 checks. It reuses Module 3's `responseMetrics` for the overshoot formula.
 - `tests/p2.test.js`: P2 tests: characteristic polynomials, Routh–Hurwitz against the roots, the critical τs in closed form, by scan and by simulation, Module 3's overshoot for P only, the second-order unstable band, overshoot growth with τs, the controller acting on ym, a saturated motor with a slow sensor, the limit cycle, the oscillation frequency, τs = 0 equal to P1, and extreme settings.
 - `tests/browser-p2.mjs`: P2 browser checks, including navigation, the checks table, the three experiments, presets, the sweep chart, phone layout and screenshots.
+- `modules/p3/index.js`: P3 Digital PID interface with adjustable PID gains, sampling time, anti-windup controls, response visualization, and Arduino code generation.
+- `modules/p3/calculations.js`: Digital PID calculations, discrete-time simulation for first-order and second-order plants, anti-windup logic, and Arduino sketch generation.
+- `modules/p3/styles.css`: P3 styling for the digital PID controls, response graphs, Arduino code display, and responsive layout.
+- `tests/p3.test.js`: Automated tests for digital PID calculations, plant simulation, anti-windup behavior, and generated Arduino code.
+- `modules/p4/index.js`: P4 PID Tuning Challenge interface with adjustable PID gains, hidden random plants, response graphs, performance requirements, Predict-then-Check activities, and scoring.
+- `modules/p4/model.js`: P4 challenge generation, first-order and second-order plant configurations, PID simulation integration, performance evaluation, and PASS/FAIL scoring.
+- `modules/p4/styles.css`: P4 styling for the challenge interface, PID sliders, response visualization, results, and mobile-friendly layout.
+- `tests/p4.test.js`: Automated tests for challenge feasibility, random plant selection, PID gain validation, steady-state error requirements, unstable responses, and scoring.
 
 To add a module: create `modules/moduleN/` with the same `mount(root)`/cleanup interface, add its stylesheet to `index.html`, and add one entry to `routes` and one tab link. There are no placeholder tabs for unfinished modules.
 
