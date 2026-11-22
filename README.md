@@ -310,6 +310,15 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 
 ![P2 phone view](docs/screenshots/p2-mobile.png)
 
+![P3 Digital PID desktop view](docs/screenshots/p3-desktop.png)
+
+![P3 Digital PID phone view](docs/screenshots/p3-mobile.jpg)
+
+![P4 PID tuning challenge desktop view](docs/screenshots/p4-desktop.png)
+
+![P4 PID tuning challenge phone view](docs/screenshots/p4-mobile.jpg)
+
+
+
 ## Assistance disclosure
-Claude (Anthropic) assisted with the Homework 2 P2 implementation on the website, and automated tests. Team members please dont forget to add  this part (':
-OpenAI Codex assisted with Module 1,3,4 implementation, documentation, and automated tests. Claude (Anthropic) assisted with the Module 2 implementation, its tests, and documentation, and with the Homework 2 P1 implementation: the shared RK4 simulator, the P1 page, its tests, the motor datasheet search and this documentation.
+Claude (Anthropic) assisted with the Homework 2 P2 implementation on the website, and automated tests.OpenAI Codex assisted with Module 1 implementation, documentation, and automated tests. Claude (Anthropic) assisted with the Module 2 implementation, its tests, and documentation, and with the Homework 2 P1 implementation: the shared RK4 simulator, the P1 page, its tests, the motor datasheet search and this documentation.ChatGPT (OpenAI) assisted with Modules 3 and 4 and Homework 2 P3 and P4 implementation, calculations, interactive graphs, PID simulations, debugging, and automated testing.
