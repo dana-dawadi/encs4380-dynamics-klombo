@@ -23,8 +23,8 @@ Team: Aseel Hamed, Ahmad Khdair, Muhammad Herzallah, and Dana Dawadi.
 | --- | --- |
 | P1 — PID playground | Aseel Hamed |
 | P2 — A slow sensor in the loop | Ahmad Khdair |
-| P3 — Digital PID | To be assigned |
-| P4 — Tuning challenge | To be assigned |
+| P3 — Digital PID | Muhammad Herzallah |
+| P4 — Tuning challenge | Dana Dawadi |
 | My system (Micromouse drive motor) | To be assigned |
 
 ## Module 1
