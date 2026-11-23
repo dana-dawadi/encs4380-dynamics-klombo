@@ -275,6 +275,83 @@ Each requirement is evaluated separately, and the overall score is calculated ba
 
 After integrating P4, all 55 automated tests passed with no failures.
 
+## My System — Micromouse Motor Speed Control
+
+This module applies PID control to our Micromouse project's drive motor. We used a JGA12-N20 DC gear motor with a Hall encoder, rated at 6 V and advertised at 500 RPM.
+
+### Motor Model
+
+The motor speed is approximated using a first-order transfer function:
+
+`G(s) = K / (τs + 1)`
+
+The parameters used are:
+
+- **Motor gain K = 0.5236 (rad/s)/PWM%:** Estimated from the motor's advertised 500 RPM at 6 V, assuming 100% PWM and no load.
+- **Time constant τ = 0.06 s:** Assumed for simulation because a verified time constant was not available.
+
+The specifications were taken from the JGA12-N20 6 V, 500 RPM AliExpress product listing. No encoder PWM step test was performed, so the model parameters are estimates rather than experimentally measured values.
+
+### Controller Design
+
+We implemented a PI controller to regulate the motor's wheel speed. The controller gains are calculated using the desired damping ratio (ζ) and natural frequency (ωn).
+
+The selected design values are:
+
+- Target wheel speed: 30 rad/s
+- Desired damping ratio: 0.75
+- Desired natural frequency: 22.88 rad/s
+- Kp = 2
+- Ki = 60
+- Kd = 0
+
+A damping ratio near 0.75 was chosen to provide a relatively fast response while keeping overshoot low. The 30 rad/s setpoint is an illustrative target for straight-line Micromouse movement.
+
+### Simulation and Results
+
+The module reuses P1's RK4 closed-loop simulator to display the motor speed and PWM command over time.
+
+With the selected parameters, the simulation produced:
+
+| Parameter | Result |
+| --- | --- |
+| Damping ratio | 0.7456 |
+| Overshoot | 5.235% |
+| Settling time (2%) | 0.226 s |
+| Steady-state error | Approximately 0% |
+| Required steady PWM | 57.3% |
+| Maximum PWM | 73.67% |
+
+The simulated response meets the desired damping ratio range of 0.6–0.8, and the PWM command remains within the 0–100% limits.
+
+### Arduino Code Generation
+
+My System reuses the Arduino code generator from P3 to generate a digital PID controller using the selected gains.
+
+The generated code includes:
+
+- Adjustable PID gains and target speed.
+- A 10 ms sampling period.
+- PWM output limits of 0–100%.
+- Anti-windup to prevent excessive integral accumulation.
+
+The generated sketch includes placeholders for encoder speed measurements and motor-driver control. These must be implemented before using the controller on the physical Micromouse.
+
+### Implementation and Testing
+
+The module consists of:
+
+- `modules/my-system/index.js` — Interactive interface, controller inputs, simulation results, and graphs.
+- `modules/my-system/model.js` — Motor modeling, PI gain calculations, simulation integration, and Arduino code generation.
+- `modules/my-system/styles.css` — Layout and responsive styling.
+- `tests/my-system.test.js` — Automated validation tests.
+
+My System was developed with assistance from ChatGPT for motor modeling, PI gain calculations, interface design, debugging, and testing.
+
+The project was tested locally using `npm test`, with 66 tests passing and no failures at the time of verification.
+
+The results represent a simulated design using estimated motor parameters and have not been validated on the physical robot.
+
 ## Run locally
 
 No build step, CDN, login, or backend is required. Serve the repository with any static HTTP server, for example:
@@ -323,6 +400,10 @@ Open `http://localhost:8000/`. Use HTTP rather than opening the HTML as a local 
 - `modules/p4/model.js`: P4 challenge generation, first-order and second-order plant configurations, PID simulation integration, performance evaluation, and PASS/FAIL scoring.
 - `modules/p4/styles.css`: P4 styling for the challenge interface, PID sliders, response visualization, results, and mobile-friendly layout.
 - `tests/p4.test.js`: Automated tests for challenge feasibility, random plant selection, PID gain validation, steady-state error requirements, unstable responses, and scoring.
+-  `modules/my-system/index.js`: My System interface with motor parameters, controller gains, response graphs, and Arduino code generation.
+- `modules/my-system/model.js`: First-order motor model, PI gain calculations, simulation, and integration with P1 and P3.
+- `modules/my-system/styles.css`: Responsive layout and styling for the Micromouse motor controller.
+- `tests/my-system.test.js`: Automated tests for the motor model, controller calculations, PWM limits, and Arduino code generation.
 
 To add a module: create `modules/moduleN/` with the same `mount(root)`/cleanup interface, add its stylesheet to `index.html`, and add one entry to `routes` and one tab link. There are no placeholder tabs for unfinished modules.
 
@@ -391,7 +472,11 @@ Module 1 tracking: [Issue #1](https://github.com/dana-dawadi/encs4380-dynamics-k
 
 ![P4 PID tuning challenge phone view](docs/screenshots/p4-mobile.jpg)
 
+![My System desktop view](docs/screenshots/my-system-desktop.png)
+
+![My System phone view](docs/screenshots/my-system-mobile.jpg)
+
 
 
 ## Assistance disclosure
-Claude (Anthropic) assisted with the Homework 2 P2 implementation on the website, and automated tests.OpenAI Codex assisted with Module 1 implementation, documentation, and automated tests. Claude (Anthropic) assisted with the Module 2 implementation, its tests, and documentation, and with the Homework 2 P1 implementation: the shared RK4 simulator, the P1 page, its tests, the motor datasheet search and this documentation.ChatGPT (OpenAI) assisted with Modules 3 and 4 and Homework 2 P3 and P4 implementation, calculations, interactive graphs, PID simulations, debugging, and automated testing.
+Claude (Anthropic) assisted with the Homework 2 P2 implementation on the website, and automated tests.OpenAI Codex assisted with Module 1 implementation, documentation, and automated tests. Claude (Anthropic) assisted with the Module 2 implementation, its tests, and documentation, and with the Homework 2 P1 implementation: the shared RK4 simulator, the P1 page, its tests, the motor datasheet search and this documentation.ChatGPT (OpenAI) assisted with Modules 3 and 4 and Homework 2 P3 and P4 and my-system implementation, calculations, interactive graphs, PID simulations, debugging, and automated testing.
