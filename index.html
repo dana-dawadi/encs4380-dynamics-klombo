@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="./modules/p2/styles.css">
   <link rel="stylesheet" href="./modules/p3/styles.css">
   <link rel="stylesheet" href="./modules/p4/styles.css">
+  <link rel="stylesheet" href="./modules/my-system/styles.css">
 </head>
 
 <body>
@@ -66,6 +67,9 @@
       </a>
       <a href="#p4" data-route="p4">
         P4 · PID tuning challenge
+      </a>
+      <a href="#my-system" data-route="my-system">
+        My System · Micromouse motor
       </a>
     </div>
   </nav>
@@ -123,7 +127,12 @@
         load: () => import('./modules/p4/index.js'),
         title: 'PID tuning challenge',
         footer: 'Control · PID tuning challenge'
-      }
+      },
+      'my-system': {
+        load: () => import('./modules/my-system/index.js'),
+        title: 'My System – Micromouse motor',
+        footer: 'Control · Micromouse motor PID design'
+    }
     };
 
     const main = document.querySelector('#main');
